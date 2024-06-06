@@ -20,4 +20,8 @@
     <Folder Include="Repositorys\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Labb2_WebDev2.0.Shared\Labb2_WebDev2.0.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

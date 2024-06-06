@@ -14,4 +14,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Labb2_WebDev2.0.Dataccess\Labb2_WebDev2.0.Dataccess.csproj" />
+  </ItemGroup>
+
 </Project>
