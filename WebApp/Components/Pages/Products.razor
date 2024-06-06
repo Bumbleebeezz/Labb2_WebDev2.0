@@ -38,19 +38,22 @@
 </div>
 
 
-<div class="dbProducts">
-    @foreach (var products in DbProducts)
-    {
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">@products.Name</h5>
-                <h6 class="card-subtitle mb-2 text-body-secondary">@products.EAN</h6>
-                <h6 class="card-subtitle mb-2 text-body-secondary">@products.Category</h6>
-                <p class="card-text">@products.Price</p>
-                <p class="card-text">@products.Description</p>
+
+<div class="dbProducts container">
+    <div class="row">
+        @foreach (var products in DbProducts)
+        {
+            <div class="card col" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">@products.Name</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">EAN : @products.EAN</h6>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">Category: @products.Category</h6>
+                    <p class="card-text">Price: @products.Price kr</p>
+                    <p class="card-text">@products.Description</p>
+                </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>
 
 
