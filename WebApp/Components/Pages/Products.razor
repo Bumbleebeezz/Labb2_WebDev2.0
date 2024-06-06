@@ -1,0 +1,156 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using System.Reflection.Metadata
+@using Labb2_WebDev2._0.Shared.DTOs
+@using Labb2_WebDev2._0.Shared.Interfaces
+@inject IHttpClientFactory _httpClientFactory
+@inject IProductService<ProductDTO> ProductService
+
+<PageTitle>Products</PageTitle>
+
+<header class="header">
+    <h1>Products</h1>
+</header>
+
+<div class="spacer"></div>
+
+<h3>New product</h3>
+<div class="container text-center m-2">
+    <div class="row row-cols-auto">
+        <InputText class="form-control col" placeholder="Name" @bind-Value="newProductName"></InputText>
+        <InputText class="form-control col" placeholder="EAN" @bind-Value="newProductEAN"></InputText>
+        <InputText class="form-control col" placeholder="Price" @bind-Value="newProductPrice"></InputText>
+        <InputText class="form-control col" placeholder="Category" @bind-Value="newProductCategory"></InputText>
+        <button class="btn btn-outline-success" type="submit" onclick="AddNewProduct()">Add</button>
+        <InputText class="form-control col" placeholder="Description" @bind-Value="newProductDescription"></InputText>
+        <InputText class="form-control col" placeholder="Discontinued" @bind-Value="newProductStatus"></InputText>
+        <button class="btn btn-outline-success" type="submit" onclick="UpdateProduct">Update</button>
+    </div>
+</div>
+
+<div class="spacer"></div>
+
+<div class="container text-center m-2">
+    <div class="row row-cols-auto">
+        <InputText class="form-control col" placeholder="Search product with EAN" @bind-Value="searchText"></InputText>
+        <button class="btn btn-outline-secondary" type="submit" onclick="searchProducts()">Search</button>
+    </div>
+</div>
+
+
+<div class="dbProducts">
+    @foreach (var products in DbProducts)
+    {
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">@products.Name</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">@products.EAN</h6>
+                <h6 class="card-subtitle mb-2 text-body-secondary">@products.Category</h6>
+                <p class="card-text">@products.Price</p>
+                <p class="card-text">@products.Description</p>
+            </div>
+        </div>
+    }
+</div>
+
+
+<script>
+    function searchProducts() {
+        SearchProducts();
+    }
+</script>
+
+
+<style>
+    h1 {
+        text-align: center;
+        font-family: Consolas;
+        color: rebeccapurple;
+    }
+
+    .header {
+        margin: 20px;
+    }
+
+    .spacer {
+        height: 50px;
+    }
+
+    .searchLabel {
+        width: 100px;
+        font-family: 'Yu Gothic';
+        font-size: 20px;
+    }
+
+    .form-control {
+        width: 450px;
+    }
+
+    .productTitles {
+        background-color: lightgrey;
+        font-family: 'Yu Gothic';
+        font-size: 20px;
+    }
+
+    .productList {
+        font-family: 'Yu Gothic';
+        font-size: 18px;
+    }
+
+    .discontinuedItem {
+        color: red;
+        font-weight: bolder;
+    }
+</style>
+
+
+@code
+{
+    public string searchText = String.Empty;
+
+    public string newProductName = String.Empty;
+    public string newProductEAN = String.Empty;
+    public string newProductPrice = String.Empty;
+    public string newProductCategory = String.Empty;
+    public string newProductDescription = String.Empty;
+    public string newProductStatus = String.Empty;
+
+    public List<ProductDTO> DbProducts = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var products = await ProductService.GetAllProducts();
+        DbProducts.AddRange(products);
+
+        // var client = _httpClientFactory.CreateClient("RestApi");
+        // var response = await client.GetAsync("/products/start=0&count=0");
+
+
+        await base.OnInitializedAsync();
+    }
+
+    private void AddNewProduct()
+    {
+        ClearAllFields();
+    }
+
+    private void ClearAllFields()
+    {
+        newProductName = String.Empty;
+        newProductEAN = String.Empty;
+        newProductPrice = String.Empty;
+        newProductCategory = String.Empty;
+        newProductDescription = String.Empty;
+        newProductStatus = String.Empty;
+    }
+
+    private async void SearchProducts()
+    {
+        var productFound = await ProductService.GetAllProducts();
+        if (productFound is null)
+        {
+            return;
+        }
+
+    }
+}

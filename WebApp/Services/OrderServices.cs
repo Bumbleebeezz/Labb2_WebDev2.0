@@ -54,7 +54,7 @@ public class OrderServices : IOrderService<OrderDTO>
     {
         throw new NotImplementedException();
 
-        //var respons = await _httpClient.GetAsync($"api/orders/{id}");
+        //var respons = await _httpClient.GetAsync($"orders/{id}");
         //if (!respons.IsSuccessStatusCode)
         //{
         //    return;
@@ -64,7 +64,7 @@ public class OrderServices : IOrderService<OrderDTO>
 
     public async Task RemoveOrder(int id)
     {
-        var respons = await _httpClient.GetAsync($"api/orders/{id}");
+        var respons = await _httpClient.GetAsync($"orders/{id}");
         if (!respons.IsSuccessStatusCode)
         {
             return;

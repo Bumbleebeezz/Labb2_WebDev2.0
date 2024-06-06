@@ -35,46 +35,39 @@ public class ProductServices : IProductService<ProductDTO>
             var product = JsonConvert.DeserializeObject<ProductDTO>(result);
             return product;
         }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 
     public async Task<ProductDTO?> GetProductByEAN(int ean)
     {
-        var response = await _httpClient.GetAsync($"product/{ean}");
+        var response = await _httpClient.GetAsync($"products/search/{ean}");
         if (response.IsSuccessStatusCode)
         {
             var result = await response.Content.ReadAsStringAsync();
             var product = JsonConvert.DeserializeObject<ProductDTO>(result);
             return product;
         }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 
     public async Task AddProduct(ProductDTO newProduct)
     {
-        var response = await _httpClient.PostAsJsonAsync($"products/add", newProduct);
+        throw new NotImplementedException();
 
-        if (!response.IsSuccessStatusCode)
-        {
-            return;
-        }
-        else if (response.IsSuccessStatusCode)
-        {
-            return;
-        }
+        //var response = await _httpClient.PostAsJsonAsync($"products/add", newProduct);
+
+        //if (!response.IsSuccessStatusCode)
+        //{
+        //    return;
+        //} 
+        
     }
 
     public async Task UpdateProductStatus(int id)
     {
         throw new NotImplementedException();
 
-        //var respons = await _httpClient.GetAsync($"api/products/{id}");
+        //var respons = await _httpClient.GetAsync($"products/{id}");
         //if (!respons.IsSuccessStatusCode)
         //{
         //    return;
@@ -84,7 +77,7 @@ public class ProductServices : IProductService<ProductDTO>
 
     public async Task DeleteProduct(int id)
     {
-        var respons = await _httpClient.GetAsync($"api/products/{id}");
+        var respons = await _httpClient.GetAsync($"products/{id}");
         if (!respons.IsSuccessStatusCode)
         {
             return;
