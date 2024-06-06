@@ -5,7 +5,7 @@ namespace Labb2_WebDev2._0.API.Extensions;
 
 public static class ProductEndpointExtensions
 {
-    public static IEndpointRouteBuilder MapCustomerEndpoints(this IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapProductEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("/products", async (ProductRepository repo) =>
         {

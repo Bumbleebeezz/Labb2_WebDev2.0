@@ -16,6 +16,7 @@ public static class CustomerEndpointExtensions
             }
             return Results.Ok(allCustomers);
         });
+
         app.MapGet("/customers/{id}", async (CustomerRepository repo, int id) =>
         {
             var customer = await repo.GetCustomerById(id);
@@ -26,6 +27,7 @@ public static class CustomerEndpointExtensions
 
             return Results.Ok(customer);
         });
+
         app.MapGet("/customers/search/{email}", async (CustomerRepository repo, string email) =>
         {
             var customer = await repo.GetCustomerByEmail(email);
@@ -36,15 +38,18 @@ public static class CustomerEndpointExtensions
 
             return Results.Ok(customer);
         });
+
         app.MapPost("/customers", async (CustomerRepository repo, Customer newCustomer) =>
         {
             repo.AddCustomer(newCustomer);
         });
-        app.MapPatch("/customers/{id}", async (CustomerRepository repo, string newFirstname, string newLastname,
+
+        app.MapPatch("/customers/{id}", async (CustomerRepository repo, int customerID, string newFirstname, string newLastname,
             string newAddress, string newEmail, string newPhone) =>
         {
-
+            await repo.UpdateCustomer(customerID, newFirstname, newLastname, newAddress, newEmail, newPhone);
         });
+
         app.MapDelete("/customers/{id}", async (CustomerRepository repo, int id) =>
         {
             var excistingCustomer = await repo.GetCustomerById(id);

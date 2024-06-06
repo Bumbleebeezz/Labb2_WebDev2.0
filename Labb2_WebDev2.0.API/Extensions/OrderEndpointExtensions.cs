@@ -5,12 +5,13 @@ namespace Labb2_WebDev2._0.API.Extensions;
 
 public static class OrderEndpointExtensions
 {
-    public static IEndpointRouteBuilder MapCustomerEndpoints(this IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapOrderEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("/orders", async (OrderRepository repo) =>
         {
             return await repo.GetAllOrders();
         });
+
         app.MapGet("/orders/{id}", async (OrderRepository repo, int id) =>
         {
             var order = await repo.GetOrderById(id);
@@ -21,10 +22,12 @@ public static class OrderEndpointExtensions
 
             return Results.Ok(order);
         });
+
         app.MapPost("/orders", async (OrderRepository repo, Order newOrder) =>
         {
-            await repo.AddOrder(newOrder);
+            await repo.AddOrder(newOrder.CustomerID, newOrder.Products);
         });
+
         app.MapPatch("/orders", async (OrderRepository repo,int id) =>
         {
             var excistingOrder = await repo.GetOrderById(id);
@@ -36,6 +39,7 @@ public static class OrderEndpointExtensions
             await repo.UpdateOrderStatus(id);
             return Results.Ok("Order status has been updated");
         });
+
         app.MapGet("/orders", async (OrderRepository repo, int id) =>
         {
             await repo.RemoveOrder(id);

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Labb2_WebDev2.0.WebApp</RootNamespace>
+    <AssemblyName>$(AssemblyName.Replace(' ', '_'))</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Labb2_WebDev2.0.API\Labb2_WebDev2.API.csproj" />
+    <ProjectReference Include="..\Labb2_WebDev2.0.Dataccess\Labb2_WebDev2.Dataccess.csproj" />
+    <ProjectReference Include="..\Labb2_WebDev2.0.Shared\Labb2_WebDev2.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
