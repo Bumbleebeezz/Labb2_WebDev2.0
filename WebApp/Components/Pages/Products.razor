@@ -3,6 +3,7 @@
 @using System.Reflection.Metadata
 @using Labb2_WebDev2._0.Shared.DTOs
 @using Labb2_WebDev2._0.Shared.Interfaces
+@using WebApp.Services
 @inject IHttpClientFactory _httpClientFactory
 @inject IProductService<ProductDTO> ProductService
 
@@ -21,10 +22,10 @@
         <InputText class="form-control col" placeholder="EAN" @bind-Value="newProductEAN"></InputText>
         <InputText class="form-control col" placeholder="Price" @bind-Value="newProductPrice"></InputText>
         <InputText class="form-control col" placeholder="Category" @bind-Value="newProductCategory"></InputText>
-        <button class="btn btn-outline-success" type="submit" onclick="AddNewProduct()">Add</button>
+        <button class="btn btn-outline-success" type="submit" @onclick="( ()=> AddProduct()">Add</button>
         <InputText class="form-control col" placeholder="Description" @bind-Value="newProductDescription"></InputText>
         <InputText class="form-control col" placeholder="Discontinued" @bind-Value="newProductStatus"></InputText>
-        <button class="btn btn-outline-success" type="submit" onclick="UpdateProduct">Update</button>
+        <button class="btn btn-outline-success" type="submit" @onclick="( ()=> UpdateProduct()">Update</button>
     </div>
 </div>
 
@@ -33,7 +34,7 @@
 <div class="container text-center m-2">
     <div class="row row-cols-auto">
         <InputText class="form-control col" placeholder="Search product with EAN" @bind-Value="searchText"></InputText>
-        <button class="btn btn-outline-secondary" type="submit" onclick="searchProducts()">Search</button>
+        <button class="btn btn-outline-secondary" type="submit" @onclick="( ()=> SearchProducts()">Search</button>
     </div>
 </div>
 
@@ -50,8 +51,8 @@
                     <h6 class="card-subtitle mb-2 text-body-secondary">Category: @products.Category</h6>
                     <p class="card-text">Price: @products.Price kr</p>
                     <p class="card-text">@products.Description</p>
-                    <button class="updateProductBtn btn btn-outline-secondary">Update</button>
-                    <button class="removeProductBtn btn btn-outline-secondary">Remove</button>
+                    <button class="updateProductBtn btn btn-outline-secondary" @onclick="( ()=> UpdateProductStatus()">Update</button>
+                    <button class="removeProductBtn btn btn-outline-secondary" @onclick="( ()=> RemoveProduct()">Remove</button>
                     @if (products.Discontinued == true)
                     {
                         <p class="discontinuedProduct">Discontinued!</p>
@@ -68,9 +69,7 @@
 
 
 <script>
-    function searchProducts() {
-        SearchProducts();
-    }
+    
 </script>
 
 
@@ -143,40 +142,49 @@
 
     public List<ProductDTO> DbProducts = new();
 
+    private ProductServices services;
+
     protected override async Task OnInitializedAsync()
     {
         var products = await ProductService.GetAllProducts();
         DbProducts.AddRange(products);
 
-        // var client = _httpClientFactory.CreateClient("RestApi");
-        // var response = await client.GetAsync("/products/start=0&count=0");
-
-
         await base.OnInitializedAsync();
     }
 
-    private void AddNewProduct()
+    private async Task DisplayAllProducts()
     {
-        ClearAllFields();
-    }
-
-    private void ClearAllFields()
-    {
-        newProductName = String.Empty;
-        newProductEAN = String.Empty;
-        newProductPrice = String.Empty;
-        newProductCategory = String.Empty;
-        newProductDescription = String.Empty;
-        newProductStatus = String.Empty;
+        var products = await ProductService.GetAllProducts();
+        DbProducts.AddRange(products);
     }
 
     private async void SearchProducts()
     {
-        var productFound = await ProductService.GetAllProducts();
+        var productFound = await ProductService.GetProductByEAN(int.Parse(searchText));
         if (productFound is null)
         {
             return;
         }
 
+    }
+
+    private async Task UpdateProduct()
+    {
+        throw new NotImplementedException();
+    }
+
+    private async Task AddProduct()
+    {
+        throw new NotImplementedException();
+    }
+
+    private async Task UpdateProductStatus()
+    {
+        throw new NotImplementedException();
+    }
+
+    private async Task RemoveProduct()
+    {
+        throw new NotImplementedException();
     }
 }
