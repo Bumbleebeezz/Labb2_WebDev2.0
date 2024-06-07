@@ -16,7 +16,7 @@ public class ProductRepository(HandmadeDbContext context) : IProductService<Prod
         return await context.Products.FindAsync(id);
     }
 
-    public async Task<Product?> GetProductByEAN(int ean)
+    public async Task<Product?> GetProductByEAN(long ean)
     {
         return await context.Products.FindAsync(ean);
     }
@@ -40,7 +40,13 @@ public class ProductRepository(HandmadeDbContext context) : IProductService<Prod
 
     public async Task DeleteProduct(int id)
     {
-        await DeleteProduct(id);
+        var removeProduct = await context.Products.FindAsync(id);
+        if (removeProduct is null)
+        {
+            Console.WriteLine($"Product with id: {id} was not found");
+            return;
+        }
+        context.Products.Remove(removeProduct);
         await context.SaveChangesAsync();
     }
 }

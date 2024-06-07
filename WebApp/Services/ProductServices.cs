@@ -38,7 +38,7 @@ public class ProductServices : IProductService<ProductDTO>
         return null;
     }
 
-    public async Task<ProductDTO?> GetProductByEAN(int ean)
+    public async Task<ProductDTO?> GetProductByEAN(long ean)
     {
         var response = await _httpClient.GetAsync($"products/search/{ean}");
         if (response.IsSuccessStatusCode)

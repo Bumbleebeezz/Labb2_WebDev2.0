@@ -4,6 +4,7 @@ namespace Labb2_WebDev2._0.Shared.DTOs;
 
 public class ProductDTO
 {
+    public int ProductID { get; set; }
     [Required]
     public string Name { get; set; }
     [Required]

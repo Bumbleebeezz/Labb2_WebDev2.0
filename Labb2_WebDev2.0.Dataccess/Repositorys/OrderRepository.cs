@@ -61,7 +61,7 @@ public class OrderRepository(HandmadeDbContext context) : IOrderService<Order>
             Console.WriteLine($"Order with id: {id} was not found");
             return;
         }
-        context.Remove(removeOrder);
+        context.Orders.Remove(removeOrder);
         await context.SaveChangesAsync();
     }
 }

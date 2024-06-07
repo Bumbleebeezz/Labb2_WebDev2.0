@@ -6,7 +6,7 @@ public interface IProductService<T> where T : class
 {
     Task<IEnumerable<T>> GetAllProducts();
     Task<T?> GetProductById(int id);
-    Task<T?> GetProductByEAN(int ean);
+    Task<T?> GetProductByEAN(long ean);
     Task AddProduct(T newProduct);
     Task UpdateProductStatus(int id);
     Task DeleteProduct(int id);

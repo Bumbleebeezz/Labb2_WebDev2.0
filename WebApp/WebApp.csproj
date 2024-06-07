@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Labb2_WebDev2.0.Dataccess\Labb2_WebDev2.0.Dataccess.csproj" />
     <ProjectReference Include="..\Labb2_WebDev2.0.Shared\Labb2_WebDev2.0.Shared.csproj" />
   </ItemGroup>
 

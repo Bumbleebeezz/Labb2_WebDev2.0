@@ -57,7 +57,13 @@ public class CustomerRepository(HandmadeDbContext context) : ICustomerService<Cu
 
     public async Task DeleteCustomer(int id)
     {
-        await DeleteCustomer(id);
+        var removeCustomer = await context.Customers.FindAsync(id);
+        if (removeCustomer is null)
+        {
+            Console.WriteLine($"Customer with id: {id} was not found");
+            return;
+        }
+        context.Customers.Remove(removeCustomer);
         await context.SaveChangesAsync();
     }
 }
