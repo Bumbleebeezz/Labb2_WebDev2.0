@@ -16,7 +16,7 @@ public class ProductRepository(HandmadeDbContext context) : IProductService<Prod
         return await context.Products.FindAsync(id);
     }
 
-    public async Task<Product?> GetProductByEAN(long ean)
+    public async Task<Product?> GetProductByEAN(string ean)
     {
         return await context.Products.FindAsync(ean);
     }

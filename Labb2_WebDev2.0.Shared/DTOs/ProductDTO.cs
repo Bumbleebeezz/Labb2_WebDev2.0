@@ -7,7 +7,7 @@ public class ProductDTO
     public int ProductID { get; set; }
     [Required]
     public string Name { get; set; }
-    [Required]
+    [Required,Key]
     public string EAN { get; set; }
     [Required]
     public float Price { get; set; }

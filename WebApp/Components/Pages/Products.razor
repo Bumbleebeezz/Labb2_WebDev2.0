@@ -34,6 +34,7 @@
     <div class="row row-cols-auto">
         <InputText class="form-control col" placeholder="Search product with EAN" @bind-Value="@searchText"></InputText>
         <button class="btn btn-outline-secondary" type="submit" @onclick="( ()=> SearchProducts())">Search</button>
+        <button class="btn btn-outline-secondary" type="submit" @onclick="( ()=> DisplayAllProducts())">Reset</button>
     </div>
 </div>
 
@@ -43,7 +44,7 @@
     <div class="row">
         @foreach (var products in DbProducts)
         {
-            <div class="card col" style="width: 18rem;">
+            <div class="card col-3" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title">@products.Name</h5>
                     <h6 class="card-subtitle mb-2 text-body-secondary">EAN : @products.EAN</h6>
@@ -54,7 +55,7 @@
                     <button class="removeProductBtn btn btn-outline-secondary" @onclick="( ()=> RemoveProduct(products.ProductID))">Remove</button>
                     @if (products.Discontinued == true)
                     {
-                        <p class="discontinuedProduct">Discontinued!</p>
+                        <p class="discontinuedProduct">Discontinued !</p>
                     }
                     else
                     {
@@ -124,20 +125,22 @@
     .discontinuedProduct {
         color: white;
         background-color: red;
+        text-align :center;
     }
 </style>
 
 
 @code
 {
-    public string searchText;
-
-    public string newProductName = String.Empty;
-    public string newProductEAN = String.Empty;
-    public string newProductPrice = String.Empty;
-    public string newProductCategory = String.Empty;
-    public string newProductDescription = String.Empty;
-    public string newProductStatus = String.Empty;
+    public string 
+        searchText,
+        newProductName,
+        newProductEAN,
+        newProductPrice,
+        newProductCategory,
+        newProductDescription,
+        newProductStatus 
+            = String.Empty;
 
     public List<ProductDTO> DbProducts = new();
 
@@ -154,6 +157,7 @@
 
     private async Task DisplayAllProducts()
     {
+        DbProducts.Clear();
         var products = await ProductService.GetAllProducts();
         DbProducts.AddRange(products);
     }
@@ -165,8 +169,7 @@
             return;
         }
 
-        var searchTextParse = long.Parse(searchText);
-        var productFound = await ProductService.GetProductByEAN(searchTextParse);
+        var productFound = await ProductService.GetProductByEAN(searchText);
         if (productFound is null)
         {
             return;

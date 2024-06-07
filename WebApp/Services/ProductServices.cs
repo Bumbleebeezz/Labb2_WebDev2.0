@@ -38,16 +38,16 @@ public class ProductServices : IProductService<ProductDTO>
         return null;
     }
 
-    public async Task<ProductDTO?> GetProductByEAN(long ean)
+    public async Task<ProductDTO?> GetProductByEAN(string ean)
     {
         var response = await _httpClient.GetAsync($"products/search/{ean}");
-        if (response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
         {
-            var result = await response.Content.ReadAsStringAsync();
-            var product = JsonConvert.DeserializeObject<ProductDTO>(result);
-            return product;
+            return null;
         }
-        return null;
+        string productJson = await response.Content.ReadAsStringAsync();
+        ProductDTO? product = JsonConvert.DeserializeObject<ProductDTO>(productJson);
+        return product;
     }
 
     public async Task AddProduct(ProductDTO newProduct)

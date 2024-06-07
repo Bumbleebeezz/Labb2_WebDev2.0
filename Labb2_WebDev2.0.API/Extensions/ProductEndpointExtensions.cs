@@ -14,7 +14,7 @@ public static class ProductEndpointExtensions
 
         app.MapGet("/products/{id}", async (ProductRepository repo, int id) =>
          {
-             var product = await repo.GetProductByEAN(id);
+             var product = await repo.GetProductById(id);
              if (product is null)
              {
                  return Results.NotFound($"Product with ID {id} was not found");
@@ -23,7 +23,7 @@ public static class ProductEndpointExtensions
              return Results.Ok(product);
          });
 
-        app.MapGet("/products/search/{ean}", async (ProductRepository repo, int ean) =>
+        app.MapGet("/products/search/{ean}", async (ProductRepository repo, string ean) =>
         {
             var product = await repo.GetProductByEAN(ean);
             if (product is null)
