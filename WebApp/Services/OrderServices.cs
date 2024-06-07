@@ -40,26 +40,13 @@ public class OrderServices : IOrderService<OrderDTO>
 
     public async Task AddOrder(int customerID, List<int> productsID)
     {
-        throw new NotImplementedException();
+	    await _httpClient.PutAsJsonAsync($"/orders/{customerID}", productsID);
 
-        //var respons = await _httpClient.PostAsJsonAsync($"orders/", neworder);
-        //if (!respons.IsSuccessStatusCode)
-        //{
-        //    return;
-        //}
-        //return neworder;
     }
 
     public async Task UpdateOrderStatus(int id)
     {
-        throw new NotImplementedException();
-
-        //var respons = await _httpClient.GetAsync($"orders/{id}");
-        //if (!respons.IsSuccessStatusCode)
-        //{
-        //    return;
-        //}
-        //var result = await respons.Content.ReadAsStringAsync();
+	    await _httpClient.PatchAsJsonAsync($"/orders/{id}", id);
     }
 
     public async Task RemoveOrder(int id)
@@ -70,6 +57,6 @@ public class OrderServices : IOrderService<OrderDTO>
             return;
         }
         var result = await respons.Content.ReadAsStringAsync();
-        _httpClient.DeleteAsync(result);
+        await _httpClient.DeleteAsync(result);
     }
 }

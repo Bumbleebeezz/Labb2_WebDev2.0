@@ -1,4 +1,5 @@
 ﻿using Labb2_WebDev2._0.Dataccess.Entities;
+using Labb2_WebDev2._0.Shared.DTOs;
 using Labb2_WebDev2._0.Shared.Interfaces;
 
 namespace Labb2_WebDev2._0.Dataccess.Repositorys;
@@ -32,7 +33,7 @@ public class CustomerRepository(HandmadeDbContext context) : ICustomerService<Cu
         return customer;
     }
 
-    public async Task UpdateCustomer(int id, string newFirstname, string newLastname, string newAddress, string newEmail, string newPhone)
+    public async Task UpdateCustomer(int id, CustomerDTO updateCustomer)
     {
         var customer = await context.Customers.FindAsync(id);
         if (customer == null)
@@ -40,11 +41,11 @@ public class CustomerRepository(HandmadeDbContext context) : ICustomerService<Cu
             Console.WriteLine($"Customer with ID: {id} was not found");
             return;
         }
-        customer.Firstname = newFirstname;
-        customer.Lastname = newLastname;
-        customer.Address = newAddress;
-        customer.Email = newEmail;
-        customer.Phone = newPhone;
+        customer.Firstname = updateCustomer.Firstname;
+        customer.Lastname = updateCustomer.Lastname;
+        customer.Address = updateCustomer.Address;
+        customer.Email = updateCustomer.Email;
+        customer.Phone = updateCustomer.Phone;
         await context.SaveChangesAsync();
     }
 

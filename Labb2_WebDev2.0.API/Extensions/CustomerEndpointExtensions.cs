@@ -1,5 +1,6 @@
 ﻿using Labb2_WebDev2._0.Dataccess.Entities;
 using Labb2_WebDev2._0.Dataccess.Repositorys;
+using Labb2_WebDev2._0.Shared.DTOs;
 
 namespace Labb2_WebDev2._0.API.Extensions;
 
@@ -44,10 +45,9 @@ public static class CustomerEndpointExtensions
             repo.AddCustomer(newCustomer);
         });
 
-        app.MapPatch("/customers/{id}", async (CustomerRepository repo, int customerID, string newFirstname, string newLastname,
-            string newAddress, string newEmail, string newPhone) =>
+        app.MapPatch("/customers/{id}", async (CustomerRepository repo, int customerID, CustomerDTO updateCustomer) =>
         {
-            await repo.UpdateCustomer(customerID, newFirstname, newLastname, newAddress, newEmail, newPhone);
+            await repo.UpdateCustomer(customerID, updateCustomer);
         });
 
         app.MapDelete("/customers/{id}", async (CustomerRepository repo, int id) =>

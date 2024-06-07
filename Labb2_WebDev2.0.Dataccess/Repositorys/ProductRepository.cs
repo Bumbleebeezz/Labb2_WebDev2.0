@@ -1,4 +1,5 @@
 ﻿using Labb2_WebDev2._0.Dataccess.Entities;
+using Labb2_WebDev2._0.Shared.DTOs;
 using Labb2_WebDev2._0.Shared.Interfaces;
 
 namespace Labb2_WebDev2._0.Dataccess.Repositorys;
@@ -28,12 +29,12 @@ public class ProductRepository(HandmadeDbContext context) : IProductService<Prod
 
     public async Task UpdateProductStatus(int id)
     {
-        var updateProduct = await context.Products.FindAsync(id);
-        if (updateProduct is null)
+        var product = await context.Products.FindAsync(id);
+        if (product is null)
         {
             return;
         }
-        updateProduct.Discontinued = true;
+        product.Discontinued = true;
         await context.SaveChangesAsync();
     }
 

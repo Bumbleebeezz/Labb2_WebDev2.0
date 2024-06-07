@@ -50,23 +50,14 @@ public class CustomerServices : ICustomerService<CustomerDTO>
         return customer;
     }
 
-    public async Task UpdateCustomer(int id, string newFirstname, string newLastname, string newAddress, string newEmail,
-        string newPhone)
+    public async Task UpdateCustomer(int id, CustomerDTO updateCustomer)
     {
-        throw new NotImplementedException();
+	    _httpClient.PatchAsJsonAsync($"/customers/{id}", updateCustomer);
     }
 
-    public Task AddCustomer(CustomerDTO newCustomer)
+    public async Task AddCustomer(CustomerDTO newCustomer)
     {
-        throw new NotImplementedException();
-
-        //var respons = await _httpClient.PostAsJsonAsync($"customers/", newCustomer);
-        //if (!respons.IsSuccessStatusCode)
-        //{
-        //    return;
-        //}
-
-        //return;
+	   await _httpClient.PutAsJsonAsync($"/customers", newCustomer);
     }
 
     public async Task DeleteCustomer(int id)
@@ -77,6 +68,6 @@ public class CustomerServices : ICustomerService<CustomerDTO>
             return;
         }
         var result = await respons.Content.ReadAsStringAsync();
-        _httpClient.DeleteAsync(result);
+        await _httpClient.DeleteAsync(result);
     }
 }

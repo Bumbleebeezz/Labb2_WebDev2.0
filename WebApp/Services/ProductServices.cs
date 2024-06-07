@@ -52,27 +52,13 @@ public class ProductServices : IProductService<ProductDTO>
 
     public async Task AddProduct(ProductDTO newProduct)
     {
-        throw new NotImplementedException();
+	    await _httpClient.PutAsJsonAsync($"/products", newProduct);
 
-        //var response = await _httpClient.PostAsJsonAsync($"products/add", newProduct);
-
-        //if (!response.IsSuccessStatusCode)
-        //{
-        //    return;
-        //} 
-        
     }
 
     public async Task UpdateProductStatus(int id)
     {
-        throw new NotImplementedException();
-
-        //var respons = await _httpClient.GetAsync($"products/{id}");
-        //if (!respons.IsSuccessStatusCode)
-        //{
-        //    return;
-        //}
-        //var result = await respons.Content.ReadAsStringAsync();
+	    await _httpClient.PatchAsJsonAsync($"/products/{id}",id);
     }
 
     public async Task DeleteProduct(int id)
@@ -83,6 +69,6 @@ public class ProductServices : IProductService<ProductDTO>
             return;
         }
         var result = await respons.Content.ReadAsStringAsync();
-        _httpClient.DeleteAsync(result);
+        await _httpClient.DeleteAsync(result);
     }
 }
