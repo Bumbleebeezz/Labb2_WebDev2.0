@@ -14,4 +14,5 @@ public class ProductDTO
     public string Category { get; set; }
     [Required]
     public string Description { get; set; }
+    public bool Discontinued { get; set; }
 }

@@ -50,6 +50,16 @@
                     <h6 class="card-subtitle mb-2 text-body-secondary">Category: @products.Category</h6>
                     <p class="card-text">Price: @products.Price kr</p>
                     <p class="card-text">@products.Description</p>
+                    <button class="updateProductBtn btn btn-outline-secondary">Update</button>
+                    <button class="removeProductBtn btn btn-outline-secondary">Remove</button>
+                    @if (products.Discontinued == true)
+                    {
+                        <p class="discontinuedProduct">Discontinued!</p>
+                    }
+                    else
+                    {
+                        <p></p>
+                    }
                 </div>
             </div>
         }
@@ -103,6 +113,19 @@
     .discontinuedItem {
         color: red;
         font-weight: bolder;
+    }
+
+    .updateProductBtn {
+        color: forestgreen;
+    }
+
+    .removeProductBtn {
+        color: red
+    }
+
+    .discontinuedProduct {
+        color: white;
+        background-color: red;
     }
 </style>
 
