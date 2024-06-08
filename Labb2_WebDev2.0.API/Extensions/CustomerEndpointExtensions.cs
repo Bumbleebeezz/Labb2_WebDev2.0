@@ -40,7 +40,7 @@ public static class CustomerEndpointExtensions
             return Results.Ok(customer);
         });
 
-        app.MapPost("/customers", async (CustomerRepository repo, Customer newCustomer) =>
+        app.MapPut("/customers", async (CustomerRepository repo, Customer newCustomer) =>
         {
             repo.AddCustomer(newCustomer);
         });

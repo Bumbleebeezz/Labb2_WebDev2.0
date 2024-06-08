@@ -41,10 +41,6 @@ public class CustomerServices : ICustomerService<CustomerDTO>
     public async Task<CustomerDTO?> GetCustomerByEmail(string email)
     {
         var response = await _httpClient.GetAsync($"customers/search/{email}");
-        if (!response.IsSuccessStatusCode)
-        {
-            return null;
-        }
         var result = await response.Content.ReadAsStringAsync();
         var customer = JsonConvert.DeserializeObject<CustomerDTO>(result);
         return customer;

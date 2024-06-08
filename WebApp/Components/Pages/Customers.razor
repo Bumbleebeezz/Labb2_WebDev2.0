@@ -1,7 +1,10 @@
 ﻿@page "/customers"
 @rendermode InteractiveServer
 @using Labb2_WebDev2._0.Shared.DTOs
+@using Labb2_WebDev2._0.Shared.Interfaces
+@using WebApp.Services
 @inject IHttpClientFactory _httpClientFactory
+@inject ICustomerService<CustomerDTO> CustomerServices
 
 <PageTitle>Customers</PageTitle>
 
@@ -9,37 +12,43 @@
 
 <div class="spacer"></div>
 
-<h3>New product</h3>
-<div class="container text-center m-2">
-    <div class="row row-cols-auto">
-        <InputText class="form-control col" placeholder="Firstname" @bind-Value="newCustomer.Firstname"></InputText>
-        <InputText class="form-control col" placeholder="Lastname" @bind-Value="newCustomer.Lastname"></InputText>
-        <InputText class="form-control col" placeholder="Address" @bind-Value="newCustomer.Address"></InputText>
-        <InputText class="form-control col" placeholder="Email" @bind-Value="newCustomer.Email"></InputText>
-        <InputText class="form-control col" placeholder="Phone" @bind-Value="newCustomer.Phone"></InputText>
-        <button class="btn btn-outline-success" type="submit" onclick="AddNewCustomer">Add</button>
-    </div>
+<div class="AddNewCustomer">
+    <h3>New Customer</h3>
+    <InputText class="form-control col" placeholder="Firstname" @bind-Value="newCustomerFirstname"></InputText>
+    <InputText class="form-control col" placeholder="Lastname" @bind-Value="newCustomerLastname"></InputText>
+    <InputText class="form-control col" placeholder="Address" @bind-Value="newCustomerAddress"></InputText>
+    <InputText class="form-control col" placeholder="Email" @bind-Value="newCustomerEmail"></InputText>
+    <InputText class="form-control col" placeholder="Phone" @bind-Value="newCustomerPhone"></InputText>
+    <button class="btn btn-outline-success" type="submit" @onclick="( ()=> AddCustomer())">Add new customer</button>
 </div>
 
 <div class="spacer"></div>
 
 <div class="container text-center m-2">
     <div class="row row-cols-auto">
-        <InputText class="form-control col" placeholder="Search customer by email" @bind-Value="searchText"></InputText>
-        <button class="btn btn-outline-secondary" type="submit">Search</button>
+        <InputText class="form-control col" placeholder="Search customer with Email" @bind-Value="searchText"></InputText>
+        <button class="btn btn-outline-secondary" type="submit" @onclick="SearchCustomers">Search</button>
+        <button class="btn btn-outline-secondary" type="submit" @onclick="DisplayUpdate">Reset</button>
     </div>
 </div>
 
 <div class="spacer"></div>
 
-<div class="col">
-    <Virtualize Items="CustomersList.OrderByDescending(c => c.Lastname).ToList()" Context="Customers">
-        <li class="card bg-gradient border-3">
-            <label class="card-header text-primary text-lg-start">@CustomersList</label>
-            <p class="card-body ">@Customers</p>
-            <label class="card-footer text-primary text-lg-end">@Customers</label>
-        </li>
-    </Virtualize>
+<div class="dbProducts container">
+    <div class="row">
+        @foreach (var customers in DbCustomers)
+        {
+            <div class="card col-4" style="width: 25rem;">
+                <div class="card-body">
+                    <h5 class="card-title">@customers.Firstname</h5>
+                    <h5 class="card-title">@customers.Lastname</h5>
+                    <p class="card-text">Address : @customers.Address</p>
+                    <p class="card-text">Email : @customers.Email</p>
+                    <p class="card-text">Phone : @customers.Phone</p>
+                </div>
+            </div>
+        }
+    </div>
 </div>
 
 <style>
@@ -66,20 +75,62 @@
 
 @code {
 
-    public List<CustomerDTO>? CustomersList = new();
+    public string
+        searchText,
+        newCustomerFirstname,
+        newCustomerLastname,
+        newCustomerAddress,
+        newCustomerEmail,
+        newCustomerPhone
+            = String.Empty;
 
-    public string searchText = String.Empty;
-
-    public CustomerDTO newCustomer = new();
+    private CustomerDTO newCustomer { get; set; }
+    public List<CustomerDTO> DbCustomers { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        var client = _httpClientFactory.CreateClient("RestApi");
-        var response = await client.GetAsync("/customers/start=0&count=0");
+        DbCustomers.AddRange(await CustomerServices.GetAllCustomers());
 
         await base.OnInitializedAsync();
     }
 
+    private async Task DisplayUpdate()
+    {
+        searchText = String.Empty;
 
+        searchText = String.Empty;
+        newCustomerFirstname = String.Empty;
+        newCustomerLastname = String.Empty;
+        newCustomerAddress = String.Empty;
+        newCustomerEmail = String.Empty;
+        newCustomerPhone = String.Empty;
 
+        DbCustomers.Clear();
+        DbCustomers.AddRange(await CustomerServices.GetAllCustomers());
+    }
+
+    private async Task AddCustomer()
+    {
+        newCustomer = new CustomerDTO()
+            {
+                Firstname = newCustomerFirstname,
+                Lastname = newCustomerLastname,
+                Address = newCustomerAddress,
+                Email = newCustomerEmail,
+                Phone = newCustomerPhone
+            };
+        await CustomerServices.AddCustomer(newCustomer);
+        await DisplayUpdate();
+    }
+
+    private async Task SearchCustomers()
+    {
+        if (searchText is null)
+        {
+            return;
+        }
+
+        DbCustomers.Clear();
+        DbCustomers.Add(await CustomerServices.GetCustomerByEmail(searchText));
+    }
 }

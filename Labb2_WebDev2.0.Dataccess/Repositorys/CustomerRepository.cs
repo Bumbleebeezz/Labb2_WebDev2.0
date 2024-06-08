@@ -1,6 +1,7 @@
 ﻿using Labb2_WebDev2._0.Dataccess.Entities;
 using Labb2_WebDev2._0.Shared.DTOs;
 using Labb2_WebDev2._0.Shared.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Labb2_WebDev2._0.Dataccess.Repositorys;
 
@@ -24,7 +25,7 @@ public class CustomerRepository(HandmadeDbContext context) : ICustomerService<Cu
 
     public async Task<Customer?> GetCustomerByEmail(string email)
     {
-        var customer = await context.Customers.FindAsync(email);
+        var customer = await context.Customers.FirstOrDefaultAsync(c => c.Email == email);
         if (customer == null)
         {
             Console.WriteLine($"Customer with email: {email} was not found");
