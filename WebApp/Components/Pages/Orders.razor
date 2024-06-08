@@ -46,8 +46,12 @@
         {
             <div class="card col-3" style="width: 18rem;">
                 <div class="card-body">
-                    <h5 class="card-title">@orders.OrderID</h5>
-                    
+                    <h5 class="card-title">Order ID : @orders.OrderID</h5>
+                    <h5 class="card-title">Customer ID : @orders.CustomerID</h5>
+                    @foreach (var product in orders.Products)
+                    {
+                        <ul>ProductID : @product</ul>
+                    }
                 </div>
             </div>
         }
@@ -84,6 +88,7 @@
     {
         DbOrders.AddRange(await OrderServices.GetAllOrders());
         DbCustomers.AddRange(await CustomerServices.GetAllCustomers());
+        DbProducts.AddRange(await ProductServices.GetAllProducts());
 
         await base.OnInitializedAsync();
     }
@@ -113,11 +118,10 @@
     {
         List<int> randomOrder = new();
         var randomProducts = new Random();
-        int[] products = new int[3];
-        foreach (var product in products)
+        for (int i = 0; i <= 3; i++)
         {
-            randomProducts.NextInt64(DbProducts.Count);
-            randomOrder.Add(product);
+            int randomProduct = randomProducts.Next(DbProducts.Count);
+            randomOrder.Add(randomProduct);
         }
 
         OrderDTO newOrder = new();

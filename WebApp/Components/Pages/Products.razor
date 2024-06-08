@@ -49,7 +49,6 @@
                     <p class="card-text">Price: @products.Price kr</p>
                     <p class="card-text">@products.Description</p>
 
-                    @* <button class="removeProductBtn btn btn-outline-secondary" @onclick="( ()=> RemoveProduct(products))">Remove</button> *@
                     @if (products.Discontinued == true)
                     {
                         <p class="discontinuedProduct">Discontinued !</p>
