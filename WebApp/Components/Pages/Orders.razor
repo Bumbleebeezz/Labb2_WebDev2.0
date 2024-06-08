@@ -139,7 +139,11 @@
             randomOrder.Add(product);
         }
 
-        await OrderServices.AddOrder(id, randomOrder);
+        OrderDTO newOrder = new();
+        newOrder.CustomerID = id;
+        newOrder.Products = randomOrder;
+
+        await OrderServices.AddOrder(newOrder);
         DisplayUpdate();
     }
 }

@@ -23,9 +23,9 @@ public static class OrderEndpointExtensions
             return Results.Ok(order);
         });
 
-        app.MapPost("/orders", async (OrderRepository repo, Order newOrder) =>
+        app.MapPut("/orders", async (OrderRepository repo, Order newOrder) =>
         {
-            await repo.AddOrder(newOrder.CustomerID, newOrder.Products);
+            await repo.AddOrder(newOrder);
         });
 
         app.MapPatch("/orders", async (OrderRepository repo,int id) =>

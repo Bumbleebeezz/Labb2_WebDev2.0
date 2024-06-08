@@ -6,7 +6,7 @@ public interface IOrderService<T> where T : class
 {
     Task<IEnumerable<T>> GetAllOrders();
     Task<T?> GetOrderById(int id);
-    Task AddOrder(int customerID, List<int> productsID);
+    Task AddOrder(T newOrder);
     Task UpdateOrderStatus(int id);
     Task RemoveOrder(int id);
 }

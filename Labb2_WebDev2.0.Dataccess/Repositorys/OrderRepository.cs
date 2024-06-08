@@ -1,4 +1,5 @@
 ﻿using Labb2_WebDev2._0.Dataccess.Entities;
+using Labb2_WebDev2._0.Shared.DTOs;
 using Labb2_WebDev2._0.Shared.Interfaces;
 
 namespace Labb2_WebDev2._0.Dataccess.Repositorys;
@@ -21,16 +22,16 @@ public class OrderRepository(HandmadeDbContext context) : IOrderService<Order>
         return orderById;
     }
 
-    public async Task AddOrder(int customerID, List<int> productsID)
+    public async Task AddOrder(Order addOrder)
     {
-        var customer = await context.Customers.FindAsync(customerID);
+        var customer = await context.Customers.FindAsync(addOrder.CustomerID);
         if (customer is null)
         {
-            Console.WriteLine($"Order with id: {customerID} was not found");
+            Console.WriteLine($"Order with id: {addOrder.CustomerID} was not found");
         }
         Order newOrder = new();
-        newOrder.CustomerID = customerID;
-        newOrder.Products = productsID;
+        newOrder.CustomerID = addOrder.CustomerID;
+        newOrder.Products = addOrder.Products;
         newOrder.DateOfOrder = DateTime.Now;
         context.Orders.AddAsync(newOrder);
         await context.SaveChangesAsync();

@@ -38,9 +38,9 @@ public class OrderServices : IOrderService<OrderDTO>
         return order;
     }
 
-    public async Task AddOrder(int customerID, List<int> productsID)
+    public async Task AddOrder(OrderDTO newOrder)
     {
-	    await _httpClient.PutAsJsonAsync($"/orders/{customerID}", productsID);
+	    await _httpClient.PutAsJsonAsync($"/orders", newOrder);
 
     }
 
