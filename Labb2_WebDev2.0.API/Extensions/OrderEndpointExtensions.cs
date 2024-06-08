@@ -40,7 +40,7 @@ public static class OrderEndpointExtensions
             return Results.Ok("Order status has been updated");
         });
 
-        app.MapGet("/orders", async (OrderRepository repo, int id) =>
+        app.MapDelete("/orders", async (OrderRepository repo, int id) =>
         {
             await repo.RemoveOrder(id);
         });

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Labb2_WebDev2._0.Dataccess.Migrations
 {
     [DbContext(typeof(HandmadeDbContext))]
-    [Migration("20240608205745_init")]
+    [Migration("20240608211217_init")]
     partial class init
     {
         /// <inheritdoc />
