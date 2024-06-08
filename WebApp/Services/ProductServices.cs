@@ -40,13 +40,16 @@ public class ProductServices : IProductService<ProductDTO>
 
     public async Task<ProductDTO?> GetProductByEAN(string ean)
     {
-        var response = await _httpClient.GetAsync($"products/search/{ean}");
-        if (!response.IsSuccessStatusCode)
-        {
-            return null;
-        }
-        string productJson = await response.Content.ReadAsStringAsync();
-        ProductDTO? product = JsonConvert.DeserializeObject<ProductDTO>(productJson);
+        var response = await _httpClient.GetAsync($"/products/search/{ean}");
+        //if (!response.IsSuccessStatusCode)
+        //{
+        //    return null;
+        //}
+        //return product;
+
+        //await _httpClient.GetAsync($"/products/search/{ean}");
+        var result = await response.Content.ReadAsStringAsync();
+        var product = JsonConvert.DeserializeObject<ProductDTO>(result);
         return product;
     }
 

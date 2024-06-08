@@ -1,6 +1,7 @@
 ﻿using Labb2_WebDev2._0.Dataccess.Entities;
 using Labb2_WebDev2._0.Shared.DTOs;
 using Labb2_WebDev2._0.Shared.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Labb2_WebDev2._0.Dataccess.Repositorys;
 
@@ -18,7 +19,8 @@ public class ProductRepository(HandmadeDbContext context) : IProductService<Prod
 
     public async Task<Product?> GetProductByEAN(string ean)
     {
-        return await context.Products.FindAsync(ean);
+        var productFound = await context.Products.FirstOrDefaultAsync(p => p.EAN == ean);
+        return productFound;
     }
 
     public async Task AddProduct(Product newProduct)

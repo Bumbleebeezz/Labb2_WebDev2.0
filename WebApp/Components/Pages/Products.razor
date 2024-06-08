@@ -34,7 +34,7 @@
 
 <div class="container text-center m-2">
     <div class="row row-cols-auto">
-        <InputText class="form-control col" placeholder="Search product with EAN" @bind-Value="@searchText"></InputText>
+        <InputText class="form-control col" placeholder="Search product with EAN" @bind-Value="searchText"></InputText>
         <button class="btn btn-outline-secondary" type="submit" @onclick="SearchProducts">Search</button>
         <button class="btn btn-outline-secondary" type="submit" @onclick="DisplayAllProducts">Reset</button>
     </div>
@@ -52,7 +52,7 @@
                     <p class="card-text">Price: @products.Price kr</p>
                     <p class="card-text">@products.Description</p>
 
-                    <button class="removeProductBtn btn btn-outline-secondary" @onclick="( ()=> RemoveProduct(products))">Remove</button>
+                    @* <button class="removeProductBtn btn btn-outline-secondary" @onclick="( ()=> RemoveProduct(products))">Remove</button> *@
                     @if (products.Discontinued == true)
                     {
                         <p class="discontinuedProduct">Discontinued !</p>
@@ -145,11 +145,6 @@
     private ProductDTO NewProduct { get; set; } = new();
     public List<ProductDTO> DbProducts { get; set; } = new();
 
-    HandmadeDbContext context = new HandmadeDbContext();
-
-    public event Action<ProductDTO> ProductStatusUpdated;
-    public event Action<ProductDTO> ProductRemoved;
-
     protected override async Task OnInitializedAsync()
     {
         DbProducts.AddRange(await ProductService.GetAllProducts());
@@ -159,24 +154,20 @@
 
     private async Task DisplayAllProducts()
     {
+        searchText = String.Empty;
         DbProducts.Clear();
         DbProducts.AddRange(await ProductService.GetAllProducts());
     }
 
-    private async void SearchProducts()
+    private async Task SearchProducts()
     {
         if (searchText is null)
         {
             return;
         }
 
-        var productFound = await ProductService.GetProductByEAN(searchText);
-        if (productFound is null)
-        {
-            return;
-        }
         DbProducts.Clear();
-        //DbProducts.Add(productFound);
+        DbProducts.Add(await ProductService.GetProductByEAN(searchText));
     }
 
     private async Task AddProduct()
