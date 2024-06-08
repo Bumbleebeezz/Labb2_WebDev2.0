@@ -48,6 +48,7 @@ public class ProductRepository(HandmadeDbContext context) : IProductService<Prod
             Console.WriteLine($"Product with id: {id} was not found");
             return;
         }
+
         context.Products.Remove(removeProduct);
         await context.SaveChangesAsync();
     }

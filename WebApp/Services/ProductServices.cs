@@ -59,12 +59,6 @@ public class ProductServices : IProductService<ProductDTO>
 
     public async Task DeleteProduct(int id)
     {
-        var respons = await _httpClient.GetAsync($"products/{id}");
-        if (!respons.IsSuccessStatusCode)
-        {
-            return;
-        }
-        var result = await respons.Content.ReadAsStringAsync();
-        await _httpClient.DeleteAsync(result);
+        await _httpClient.DeleteAsync($"/products/{id}");
     }
 }

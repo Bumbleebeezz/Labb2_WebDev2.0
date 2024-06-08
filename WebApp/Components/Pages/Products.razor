@@ -57,6 +57,8 @@
                     {
                         <button class="updateProductBtn btn btn-outline-secondary" @onclick="( ()=> UpdateProductStatus(products.ProductID))">Update</button>
                     }
+                    <button class="removeProductBtn btn btn-outline-danger" @onclick="( ()=> RemoveProduct(products.ProductID))">Remove</button>
+
                 </div>
             </div>
         }
@@ -201,14 +203,14 @@
         await DisplayUpdate();
     }
 
-    private async void RemoveProduct(ProductDTO removeProduct)
+    private async void RemoveProduct(int id)
     {
-        var product = await ProductService.GetProductById(removeProduct.ProductID);
-        if (product != null)
+        var product = await ProductService.GetProductById(id);
+        if (product is null)
         {
             return;
         }
-        await ProductService.DeleteProduct(product.ProductID);
+        await ProductService.DeleteProduct(id);
         DisplayUpdate();
     }
 }
