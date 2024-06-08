@@ -1,6 +1,7 @@
 ﻿@page "/"
 @rendermode InteractiveServer
 @using System.Reflection.Metadata
+@using Labb2_WebDev2._0.Dataccess
 @using Labb2_WebDev2._0.Dataccess.Entities
 @using Labb2_WebDev2._0.Shared.DTOs
 @using Labb2_WebDev2._0.Shared.Interfaces
@@ -17,16 +18,21 @@
 <div class="spacer"></div>
 
 <h3>New product</h3>
-<div class="container text-center m-2">
-    <div class="row row-cols-auto">
-        <InputText class="form-control col" placeholder="Name" @bind-Value="newProductName"></InputText>
-        <InputText class="form-control col" placeholder="EAN" @bind-Value="newProductEAN"></InputText>
-        <InputText class="form-control col" placeholder="Price" @bind-Value="newProductPrice"></InputText>
-        <InputText class="form-control col" placeholder="Category" @bind-Value="newProductCategory"></InputText>
-        <InputText class="form-control col" placeholder="Description" @bind-Value="newProductDescription"></InputText>
-        <button class="btn btn-outline-success" type="submit" @onclick="( ()=> AddProduct())">Add new product</button>
-    </div>
-</div>
+
+<EditForm Model="NewProduct" OnValidSubmit="AddProduct">
+    <DataAnnotationsValidator />
+    <InputText class="form-control col" placeholder="Name" @bind-Value="newProductName"></InputText>
+    <InputText class="form-control col" placeholder="EAN" @bind-Value="newProductEAN"></InputText>
+    <InputText class="form-control col" placeholder="Price" @bind-Value="newProductPrice"></InputText>
+    <InputText class="form-control col" placeholder="Category" @bind-Value="newProductCategory"></InputText>
+    <InputText class="form-control col" placeholder="Description" @bind-Value="newProductDescription"></InputText>
+    <ValidationSummary />
+</EditForm>
+<button class="btn btn-outline-success" type="submit" @onclick="( ()=> AddProduct())">Add new product</button>
+
+<div class="spacer"></div>
+
+
 
 <div class="spacer"></div>
 
@@ -38,9 +44,9 @@
     </div>
 </div>
 
+<ul ></ul>
 
-
-<div class="dbProducts container">
+<div  class="dbProducts container">
     <div class="row">
         @foreach (var products in DbProducts)
         {
@@ -142,15 +148,17 @@
         newProductStatus 
             = String.Empty;
 
-    public List<ProductDTO> DbProducts = new();
+    private ProductDTO NewProduct { get; set; } = new();
+    public List<Product> DbProducts { get; set; } = new();
+
+    HandmadeDbContext context = new HandmadeDbContext();
 
     public event Action<ProductDTO> ProductStatusUpdated;
     public event Action<ProductDTO> ProductRemoved;
 
     protected override async Task OnInitializedAsync()
     {
-        var products = await ProductService.GetAllProducts();
-        DbProducts.AddRange(products);
+        DbProducts.AddRange(context.Products);
 
         await base.OnInitializedAsync();
     }
@@ -158,7 +166,7 @@
     private async Task DisplayAllProducts()
     {
         DbProducts.Clear();
-        var products = await ProductService.GetAllProducts();
+        var products = context.Products;
         DbProducts.AddRange(products);
     }
 
