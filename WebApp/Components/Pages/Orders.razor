@@ -13,6 +13,22 @@
 
 <div class="spacer"></div>
 
+<div class="dbProducts container">
+    <div class="row">
+        @foreach (var customers in DbCustomers)
+        {
+            <div class="card col-3" style="width: 25rem;">
+                <div class="card-body">
+                    <h5 class="card-title">@customers.Firstname @customers.Lastname</h5>
+                    <button class="updateProductBtn btn btn-outline-secondary" @onclick="( ()=> PlaceOrder(customers.CustomerID))">Place random order</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="spacer"></div>
+
 <div class="container text-center m-2">
     <div class="row row-cols-auto">
         <InputText class="form-control col" placeholder="Search Order by ID" @bind-Value="searchText"></InputText>
@@ -24,13 +40,13 @@
 <div class="spacer"></div>
 
 <h3>All orders</h3>
-<div class="dbProducts container">
+<div class="dbOrders container">
     <div class="row">
         @foreach (var orders in DbOrders)
         {
             <div class="card col-3" style="width: 18rem;">
                 <div class="card-body">
-                    <h5 class="card-title">@orders.CustomerID</h5>
+                    <h5 class="card-title">@orders.OrderID</h5>
                     
                 </div>
             </div>
@@ -80,10 +96,13 @@
 
     private string searchText = String.Empty;
     public List<OrderDTO> DbOrders { get; set; } = new();
+    public List<CustomerDTO> DbCustomers { get; set; } = new();
+    public List<ProductDTO> DbProducts { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
         DbOrders.AddRange(await OrderServices.GetAllOrders());
+        DbCustomers.AddRange(await CustomerServices.GetAllCustomers());
 
         await base.OnInitializedAsync();
     }
@@ -107,5 +126,20 @@
 
         DbOrders.Clear();
         DbOrders.AddRange(await OrderServices.GetAllOrders());
+    }
+
+    private async Task PlaceOrder(int id)
+    {
+        List<int> randomOrder = new();
+        var randomProducts = new Random();
+        int[] products = new int[3];
+        foreach (var product in products)
+        {
+            randomProducts.NextInt64(DbProducts.Count);
+            randomOrder.Add(product);
+        }
+
+        await OrderServices.AddOrder(id, randomOrder);
+        DisplayUpdate();
     }
 }

@@ -27,7 +27,7 @@
 
 <div class="UpdateCustomer">
     <h3>Update Customer</h3>
-    <InputText class="form-control col" placeholder="Firstname (Must match firstname to update)" @bind-Value="updateCustomerFirstname"></InputText>
+    <InputText class="form-control col" placeholder="Firstname" @bind-Value="updateCustomerFirstname"></InputText>
     <InputText class="form-control col" placeholder="Lastname" @bind-Value="updateCustomerLastname"></InputText>
     <InputText class="form-control col" placeholder="Address" @bind-Value="updateCustomerAddress"></InputText>
     <InputText class="form-control col" placeholder="Email" @bind-Value="updateCustomerEmail"></InputText>
@@ -58,7 +58,6 @@
                     <p class="card-text">Address : @customers.Address</p>
                     <p class="card-text">Email : @customers.Email</p>
                     <p class="card-text">Phone : @customers.Phone</p>
-                    <button class="updateProductBtn btn btn-outline-secondary" @onclick="( ()=> PlaceOrder(customers.CustomerID))">Place random order</button>
                     <button class="updateProductBtn btn btn-outline-secondary" @onclick="( ()=> UpdateCustomer(customers.CustomerID))">Update customer</button>
                 </div>
             </div>
@@ -109,7 +108,6 @@
             = String.Empty;
 
     private CustomerDTO newCustomer { get; set; }
-    private OrderDTO newOrder { get; set; }
     public List<CustomerDTO> DbCustomers { get; set; } = new();
     public List<ProductDTO> DbProducts { get; set; } = new();
 
@@ -123,13 +121,18 @@
     private async Task DisplayUpdate()
     {
         searchText = String.Empty;
-
-        searchText = String.Empty;
+        
         newCustomerFirstname = String.Empty;
         newCustomerLastname = String.Empty;
         newCustomerAddress = String.Empty;
         newCustomerEmail = String.Empty;
         newCustomerPhone = String.Empty;
+
+        updateCustomerFirstname = String.Empty;
+        updateCustomerLastname = String.Empty;
+        updateCustomerAddress = String.Empty;
+        updateCustomerEmail = String.Empty;
+        updateCustomerPhone = String.Empty;
 
         DbCustomers.Clear();
         DbCustomers.AddRange(await CustomerServices.GetAllCustomers());
@@ -160,19 +163,7 @@
         DbCustomers.Add(await CustomerServices.GetCustomerByEmail(searchText));
     }
 
-    private async Task PlaceOrder(int id)
-    {
-        List<int> randomOrder = new();
-        var randomProducts = new Random();
-        int[] products = new int[3];
-        foreach (var product in products)
-        {
-            randomProducts.NextInt64(DbProducts.Count);
-            randomOrder.Add(product);
-        }
-
-        await OrderServices.AddOrder(id, randomOrder);
-    }
+    
 
     private async Task UpdateCustomer(int id)
     {
