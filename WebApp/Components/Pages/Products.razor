@@ -52,14 +52,14 @@
                     <p class="card-text">Price: @products.Price kr</p>
                     <p class="card-text">@products.Description</p>
 
-                    <button class="removeProductBtn btn btn-outline-secondary" @onclick="( ()=> RemoveProduct(products.ProductID))">Remove</button>
+                    <button class="removeProductBtn btn btn-outline-secondary" @onclick="( ()=> RemoveProduct(products))">Remove</button>
                     @if (products.Discontinued == true)
                     {
                         <p class="discontinuedProduct">Discontinued !</p>
                     }
                     else
                     {
-                        <button class="updateProductBtn btn btn-outline-secondary" @onclick="( ()=> UpdateProductStatus(products))">Update</button>
+                        <button class="updateProductBtn btn btn-outline-secondary" @onclick="( ()=> UpdateProductStatus(products.ProductID))">Update</button>
                     }
                 </div>
             </div>
@@ -181,25 +181,39 @@
 
     private async Task AddProduct()
     {
-        await ProductService.AddProduct(NewProduct);
+        var product = new ProductDTO
+        {
+            Name = newProductName,
+            EAN = newProductEAN,
+            Price = float.Parse(newProductPrice),
+            Category = newProductCategory,
+            Description = newProductDescription
+
+        };
+        await ProductService.AddProduct(product);
         await DisplayAllProducts();
     }
 
-    private async Task UpdateProductStatus(ProductDTO removeProduct)
+    private async Task UpdateProductStatus(int id)
+    {
+        var product = await ProductService.GetProductById(id);
+        if (product != null)
+        {
+            product.Discontinued = true;
+        }
+
+        await ProductService.UpdateProductStatus(id);
+        await DisplayAllProducts();
+    }
+
+    private async void RemoveProduct(ProductDTO removeProduct)
     {
         var product = await ProductService.GetProductById(removeProduct.ProductID);
         if (product != null)
         {
-            product.Discontinued = true;
-            
-            ProductStatusUpdated.Invoke(product);
+            return;
         }
-
-        await DisplayAllProducts();
-    }
-
-    private async void RemoveProduct(int productID)
-    {
-        await ProductService.DeleteProduct(productID);
+        await ProductService.DeleteProduct(product.ProductID);
+        DisplayAllProducts();
     }
 }

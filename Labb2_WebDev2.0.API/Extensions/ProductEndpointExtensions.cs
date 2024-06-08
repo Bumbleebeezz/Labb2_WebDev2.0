@@ -53,6 +53,11 @@ public static class ProductEndpointExtensions
 
         app.MapDelete("/products/{id}", async (ProductRepository repo, int id) =>
         {
+            var excistingProduct = await repo.GetProductById(id);
+            if (excistingProduct is null)
+            {
+                return Results.BadRequest($"Product with id {id} was not found");
+            }
             await repo.DeleteProduct(id);
             return Results.Ok("Product has been removed");
         });
