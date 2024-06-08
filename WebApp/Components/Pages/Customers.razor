@@ -108,6 +108,7 @@
             = String.Empty;
 
     private CustomerDTO newCustomer { get; set; }
+    private CustomerDTO updateCustomer { get; set; }
     public List<CustomerDTO> DbCustomers { get; set; } = new();
     public List<ProductDTO> DbProducts { get; set; } = new();
 
@@ -167,6 +168,17 @@
 
     private async Task UpdateCustomer(int id)
     {
-        
+        updateCustomer = new CustomerDTO()
+        {
+            CustomerID = id,
+            Firstname = updateCustomerFirstname,
+            Lastname = updateCustomerLastname,
+            Address = updateCustomerAddress,
+            Email = updateCustomerEmail,
+            Phone = updateCustomerPhone
+        };
+
+        await CustomerServices.UpdateCustomer(updateCustomer);
+        DisplayUpdate();
     }
 }

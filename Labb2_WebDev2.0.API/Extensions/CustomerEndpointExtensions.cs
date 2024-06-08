@@ -45,9 +45,9 @@ public static class CustomerEndpointExtensions
             repo.AddCustomer(newCustomer);
         });
 
-        app.MapPatch("/customers/{id}", async (CustomerRepository repo, int customerID, CustomerDTO updateCustomer) =>
+        app.MapPatch("/customers/{id}", async (CustomerRepository repo, CustomerDTO updateCustomer) =>
         {
-            await repo.UpdateCustomer(customerID, updateCustomer);
+            await repo.UpdateCustomer(updateCustomer);
         });
 
         app.MapDelete("/customers/{id}", async (CustomerRepository repo, int id) =>

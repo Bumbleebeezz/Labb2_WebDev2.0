@@ -46,9 +46,9 @@ public class CustomerServices : ICustomerService<CustomerDTO>
         return customer;
     }
 
-    public async Task UpdateCustomer(int id, CustomerDTO updateCustomer)
+    public async Task UpdateCustomer(CustomerDTO updateCustomer)
     {
-	    _httpClient.PatchAsJsonAsync($"/customers/{id}", updateCustomer);
+	    _httpClient.PatchAsJsonAsync($"/customers/{updateCustomer.CustomerID}", updateCustomer);
     }
 
     public async Task AddCustomer(CustomerDTO newCustomer)

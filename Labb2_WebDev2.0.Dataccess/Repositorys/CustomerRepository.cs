@@ -34,12 +34,12 @@ public class CustomerRepository(HandmadeDbContext context) : ICustomerService<Cu
         return customer;
     }
 
-    public async Task UpdateCustomer(int id, CustomerDTO updateCustomer)
+    public async Task UpdateCustomer(CustomerDTO updateCustomer)
     {
-        var customer = await context.Customers.FindAsync(id);
+        var customer = await context.Customers.FindAsync(updateCustomer.CustomerID);
         if (customer == null)
         {
-            Console.WriteLine($"Customer with ID: {id} was not found");
+            Console.WriteLine($"Customer with ID: {updateCustomer.CustomerID} was not found");
             return;
         }
         customer.Firstname = updateCustomer.Firstname;
