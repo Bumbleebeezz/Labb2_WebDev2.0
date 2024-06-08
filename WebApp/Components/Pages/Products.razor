@@ -17,18 +17,15 @@
 
 <div class="spacer"></div>
 
-<h3>New product</h3>
-
-<EditForm Model="NewProduct" OnValidSubmit="AddProduct">
-    <DataAnnotationsValidator />
+<div class="AddNewProduct">
+    <h3>New product</h3>
     <InputText class="form-control col" placeholder="Name" @bind-Value="newProductName"></InputText>
     <InputText class="form-control col" placeholder="EAN" @bind-Value="newProductEAN"></InputText>
     <InputText class="form-control col" placeholder="Price" @bind-Value="newProductPrice"></InputText>
     <InputText class="form-control col" placeholder="Category" @bind-Value="newProductCategory"></InputText>
     <InputText class="form-control col" placeholder="Description" @bind-Value="newProductDescription"></InputText>
-    <ValidationSummary />
-</EditForm>
-<button class="btn btn-outline-success" type="submit" @onclick="AddProduct">Add new product</button>
+    <button class="btn btn-outline-success" type="submit" @onclick="( ()=> AddProduct())">Add new product</button>
+</div>
 
 <div class="spacer"></div>
 
@@ -36,7 +33,7 @@
     <div class="row row-cols-auto">
         <InputText class="form-control col" placeholder="Search product with EAN" @bind-Value="searchText"></InputText>
         <button class="btn btn-outline-secondary" type="submit" @onclick="SearchProducts">Search</button>
-        <button class="btn btn-outline-secondary" type="submit" @onclick="DisplayAllProducts">Reset</button>
+        <button class="btn btn-outline-secondary" type="submit" @onclick="DisplayUpdate">Reset</button>
     </div>
 </div>
 
@@ -142,7 +139,7 @@
         newProductStatus 
             = String.Empty;
 
-    private ProductDTO NewProduct { get; set; } = new();
+    private ProductDTO newProduct { get; set; } 
     public List<ProductDTO> DbProducts { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
@@ -152,9 +149,17 @@
         await base.OnInitializedAsync();
     }
 
-    private async Task DisplayAllProducts()
+    private async Task DisplayUpdate()
     {
         searchText = String.Empty;
+
+        newProductName = String.Empty;
+        newProductEAN = String.Empty;
+        newProductPrice = String.Empty;
+        newProductCategory = String.Empty;
+        newProductDescription = String.Empty;
+        newProductStatus = String.Empty;
+
         DbProducts.Clear();
         DbProducts.AddRange(await ProductService.GetAllProducts());
     }
@@ -172,17 +177,17 @@
 
     private async Task AddProduct()
     {
-        var product = new ProductDTO
+        newProduct = new ProductDTO()
         {
             Name = newProductName,
             EAN = newProductEAN,
             Price = float.Parse(newProductPrice),
             Category = newProductCategory,
-            Description = newProductDescription
-
+            Description = newProductDescription,
+            Discontinued = false
         };
-        await ProductService.AddProduct(product);
-        await DisplayAllProducts();
+        await ProductService.AddProduct(newProduct);
+        await DisplayUpdate();
     }
 
     private async Task UpdateProductStatus(int id)
@@ -194,7 +199,7 @@
         }
 
         await ProductService.UpdateProductStatus(id);
-        await DisplayAllProducts();
+        await DisplayUpdate();
     }
 
     private async void RemoveProduct(ProductDTO removeProduct)
@@ -205,6 +210,6 @@
             return;
         }
         await ProductService.DeleteProduct(product.ProductID);
-        DisplayAllProducts();
+        DisplayUpdate();
     }
 }

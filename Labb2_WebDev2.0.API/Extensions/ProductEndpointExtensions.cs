@@ -34,9 +34,10 @@ public static class ProductEndpointExtensions
             return Results.Ok(product);
         });
 
-        app.MapPost("/products", async (ProductRepository repo, Product newProduct) =>
+        app.MapPut("/products", async (ProductRepository repo, Product newProduct) =>
         {
             await repo.AddProduct(newProduct);
+            return Results.Ok(newProduct);
         });
 
         app.MapPatch("/products/{id}", async (ProductRepository repo, int id) =>

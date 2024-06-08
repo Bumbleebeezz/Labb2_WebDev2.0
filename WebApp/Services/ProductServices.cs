@@ -1,4 +1,5 @@
-﻿using Labb2_WebDev2._0.Shared.DTOs;
+﻿using Labb2_WebDev2._0.Dataccess.Entities;
+using Labb2_WebDev2._0.Shared.DTOs;
 using Labb2_WebDev2._0.Shared.Interfaces;
 using Newtonsoft.Json;
 
@@ -41,13 +42,6 @@ public class ProductServices : IProductService<ProductDTO>
     public async Task<ProductDTO?> GetProductByEAN(string ean)
     {
         var response = await _httpClient.GetAsync($"/products/search/{ean}");
-        //if (!response.IsSuccessStatusCode)
-        //{
-        //    return null;
-        //}
-        //return product;
-
-        //await _httpClient.GetAsync($"/products/search/{ean}");
         var result = await response.Content.ReadAsStringAsync();
         var product = JsonConvert.DeserializeObject<ProductDTO>(result);
         return product;
@@ -56,7 +50,6 @@ public class ProductServices : IProductService<ProductDTO>
     public async Task AddProduct(ProductDTO newProduct)
     {
 	    await _httpClient.PutAsJsonAsync($"/products", newProduct);
-
     }
 
     public async Task UpdateProductStatus(int id)
