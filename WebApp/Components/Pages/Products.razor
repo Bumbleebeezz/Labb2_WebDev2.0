@@ -28,23 +28,17 @@
     <InputText class="form-control col" placeholder="Description" @bind-Value="newProductDescription"></InputText>
     <ValidationSummary />
 </EditForm>
-<button class="btn btn-outline-success" type="submit" @onclick="( ()=> AddProduct())">Add new product</button>
-
-<div class="spacer"></div>
-
-
+<button class="btn btn-outline-success" type="submit" @onclick="AddProduct">Add new product</button>
 
 <div class="spacer"></div>
 
 <div class="container text-center m-2">
     <div class="row row-cols-auto">
         <InputText class="form-control col" placeholder="Search product with EAN" @bind-Value="@searchText"></InputText>
-        <button class="btn btn-outline-secondary" type="submit" @onclick="( ()=> SearchProducts())">Search</button>
-        <button class="btn btn-outline-secondary" type="submit" @onclick="( ()=> DisplayAllProducts())">Reset</button>
+        <button class="btn btn-outline-secondary" type="submit" @onclick="SearchProducts">Search</button>
+        <button class="btn btn-outline-secondary" type="submit" @onclick="DisplayAllProducts">Reset</button>
     </div>
 </div>
-
-<ul ></ul>
 
 <div  class="dbProducts container">
     <div class="row">
@@ -149,7 +143,7 @@
             = String.Empty;
 
     private ProductDTO NewProduct { get; set; } = new();
-    public List<Product> DbProducts { get; set; } = new();
+    public List<ProductDTO> DbProducts { get; set; } = new();
 
     HandmadeDbContext context = new HandmadeDbContext();
 
@@ -158,7 +152,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        DbProducts.AddRange(context.Products);
+        DbProducts.AddRange(await ProductService.GetAllProducts());
 
         await base.OnInitializedAsync();
     }
@@ -166,8 +160,7 @@
     private async Task DisplayAllProducts()
     {
         DbProducts.Clear();
-        var products = context.Products;
-        DbProducts.AddRange(products);
+        DbProducts.AddRange(await ProductService.GetAllProducts());
     }
 
     private async void SearchProducts()
@@ -183,13 +176,13 @@
             return;
         }
         DbProducts.Clear();
-        DbProducts.Add(productFound);
+        //DbProducts.Add(productFound);
     }
 
     private async Task AddProduct()
     {
-        throw new NotImplementedException();
-        //await DisplayAllProducts();
+        await ProductService.AddProduct(NewProduct);
+        await DisplayAllProducts();
     }
 
     private async Task UpdateProductStatus(ProductDTO removeProduct)
@@ -205,9 +198,8 @@
         await DisplayAllProducts();
     }
 
-    private void RemoveProduct(int productID)
+    private async void RemoveProduct(int productID)
     {
-        ProductService.DeleteProduct(productID);
-
+        await ProductService.DeleteProduct(productID);
     }
 }
