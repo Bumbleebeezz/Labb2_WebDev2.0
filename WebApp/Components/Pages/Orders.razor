@@ -1,9 +1,64 @@
 ﻿@page "/orders"
+@using Labb2_WebDev2._0.Shared.DTOs
+@using Labb2_WebDev2._0.Shared.Interfaces
+@using WebApp.Services
 @rendermode InteractiveServer
+@inject ICustomerService<CustomerDTO> CustomerServices
+@inject IProductService<ProductDTO> ProductServices
+@inject IOrderService<OrderDTO> OrderServices
 
 <PageTitle>Orders</PageTitle>
 
 <h1>Orders</h1>
+
+<div class="spacer"></div>
+
+<div class="container text-center m-2">
+    <div class="row row-cols-auto">
+        <InputText class="form-control col" placeholder="Search Order by ID" @bind-Value="searchText"></InputText>
+        <button class="btn btn-outline-secondary" type="submit" @onclick="SearchOrders">Search</button>
+        <button class="btn btn-outline-secondary" type="submit" @onclick="DisplayUpdate">Reset</button>
+    </div>
+</div>
+
+<div class="spacer"></div>
+
+<h3>All orders</h3>
+<div class="dbProducts container">
+    <div class="row">
+        @foreach (var orders in DbOrders)
+        {
+            <div class="card col-3" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">@orders.CustomerID</h5>
+                    
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="spacer"></div>
+
+<div class="dbProducts container">
+    <div class="row">
+        @foreach (var orders in DbOrders)
+        {
+            <div class="card col-3" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">@orders.CustomerID</h5>
+                    @for (int i = 0; i < orders.Products.Count; i++)
+                    {
+                        <h3>@orders.Products[i]</h3>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="spacer"></div>
+
 
 <style>
     h1 {
@@ -11,8 +66,46 @@
         font-family: Consolas;
         color: rebeccapurple;
     }
+
+    .spacer {
+        height: 50px;
+    }
+
+    .form-control {
+        width: 450px;
+    }
 </style>
 
 @code {
 
+    private string searchText = String.Empty;
+    public List<OrderDTO> DbOrders { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        DbOrders.AddRange(await OrderServices.GetAllOrders());
+
+        await base.OnInitializedAsync();
+    }
+
+    private async Task SearchOrders()
+    {
+        if (searchText is null)
+        {
+            return;
+        }
+
+        var searchId = int.Parse(searchText);
+
+        DbOrders.Clear();
+        DbOrders.Add(await OrderServices.GetOrderById(searchId));
+    }
+
+    private async Task DisplayUpdate()
+    {
+        searchText = String.Empty;
+
+        DbOrders.Clear();
+        DbOrders.AddRange(await OrderServices.GetAllOrders());
+    }
 }

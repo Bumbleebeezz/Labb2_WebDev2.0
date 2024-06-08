@@ -29,15 +29,10 @@ public class OrderRepository(HandmadeDbContext context) : IOrderService<Order>
             Console.WriteLine($"Order with id: {customerID} was not found");
         }
         Order newOrder = new();
-
-        foreach (var product in productsID)
-        {
-            Product prod = await context.Products.FindAsync(product);
-            newOrder.Products.Add(prod.ProductID);
-        }
         newOrder.CustomerID = customerID;
+        newOrder.Products = productsID;
         newOrder.DateOfOrder = DateTime.Now;
-        context.Orders.Add(newOrder);
+        context.Orders.AddAsync(newOrder);
         await context.SaveChangesAsync();
     }
 

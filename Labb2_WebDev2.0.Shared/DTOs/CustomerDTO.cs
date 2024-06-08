@@ -4,6 +4,7 @@ namespace Labb2_WebDev2._0.Shared.DTOs;
 
 public class CustomerDTO
 {
+    public int CustomerID { get; set; }
     [Required]
     public string Firstname { get; set; }
     [Required]

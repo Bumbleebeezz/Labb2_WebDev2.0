@@ -5,6 +5,7 @@
 @using WebApp.Services
 @inject IHttpClientFactory _httpClientFactory
 @inject ICustomerService<CustomerDTO> CustomerServices
+@inject IOrderService<OrderDTO> OrderServices
 
 <PageTitle>Customers</PageTitle>
 
@@ -20,6 +21,18 @@
     <InputText class="form-control col" placeholder="Email" @bind-Value="newCustomerEmail"></InputText>
     <InputText class="form-control col" placeholder="Phone" @bind-Value="newCustomerPhone"></InputText>
     <button class="btn btn-outline-success" type="submit" @onclick="( ()=> AddCustomer())">Add new customer</button>
+</div>
+
+<div class="spacer"></div>
+
+<div class="UpdateCustomer">
+    <h3>Update Customer</h3>
+    <InputText class="form-control col" placeholder="Firstname (Must match firstname to update)" @bind-Value="updateCustomerFirstname"></InputText>
+    <InputText class="form-control col" placeholder="Lastname" @bind-Value="updateCustomerLastname"></InputText>
+    <InputText class="form-control col" placeholder="Address" @bind-Value="updateCustomerAddress"></InputText>
+    <InputText class="form-control col" placeholder="Email" @bind-Value="updateCustomerEmail"></InputText>
+    <InputText class="form-control col" placeholder="Phone" @bind-Value="updateCustomerPhone"></InputText>
+    <p></p>
 </div>
 
 <div class="spacer"></div>
@@ -45,11 +58,17 @@
                     <p class="card-text">Address : @customers.Address</p>
                     <p class="card-text">Email : @customers.Email</p>
                     <p class="card-text">Phone : @customers.Phone</p>
+                    <button class="updateProductBtn btn btn-outline-secondary" @onclick="( ()=> PlaceOrder(customers.CustomerID))">Place random order</button>
+                    <button class="updateProductBtn btn btn-outline-secondary" @onclick="( ()=> UpdateCustomer(customers.CustomerID))">Update customer</button>
                 </div>
             </div>
         }
     </div>
 </div>
+
+<script>
+    
+</script>
 
 <style>
     h1 {
@@ -81,11 +100,18 @@
         newCustomerLastname,
         newCustomerAddress,
         newCustomerEmail,
-        newCustomerPhone
+        newCustomerPhone,
+        updateCustomerFirstname,
+        updateCustomerLastname,
+        updateCustomerAddress,
+        updateCustomerEmail,
+        updateCustomerPhone
             = String.Empty;
 
     private CustomerDTO newCustomer { get; set; }
+    private OrderDTO newOrder { get; set; }
     public List<CustomerDTO> DbCustomers { get; set; } = new();
+    public List<ProductDTO> DbProducts { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -132,5 +158,24 @@
 
         DbCustomers.Clear();
         DbCustomers.Add(await CustomerServices.GetCustomerByEmail(searchText));
+    }
+
+    private async Task PlaceOrder(int id)
+    {
+        List<int> randomOrder = new();
+        var randomProducts = new Random();
+        int[] products = new int[3];
+        foreach (var product in products)
+        {
+            randomProducts.NextInt64(DbProducts.Count);
+            randomOrder.Add(product);
+        }
+
+        await OrderServices.AddOrder(id, randomOrder);
+    }
+
+    private async Task UpdateCustomer(int id)
+    {
+        
     }
 }
